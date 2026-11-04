@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { db } from "./db/index.js";
-import { watchlist, watchedEpisode } from "./db/schema.js";
+import { watchlist, watchedEpisode, mediaAvailability } from "./db/schema.js";
 
 export const mediaRouter = Router();
 const validType = (type) => type === "movie" || type === "tv";
@@ -77,9 +77,11 @@ mediaRouter.get("/watchlist", async (_req, res, next) => {
       posterUrl: watchlist.posterUrl,
       type: watchlist.type,
       status: watchlist.status,
+      availability: sql`case when ${mediaAvailability.status} = 'available' then 'available' else 'unavailable' end`,
       episodeTotal: watchlist.episodeTotal,
       episodesWatched: sql`(select count(*)::int from watched_episode where watchlist_id = ${watchlist.id})`.mapWith(Number),
     }).from(watchlist)
+      .leftJoin(mediaAvailability, and(eq(mediaAvailability.type, watchlist.type), eq(mediaAvailability.tmdbId, watchlist.tmdbId)))
       .where(eq(watchlist.userId, res.locals.session.user.id))
       .orderBy(desc(watchlist.createdAt), desc(watchlist.id));
     // Populate episode counts for series added before progress tracking existed.

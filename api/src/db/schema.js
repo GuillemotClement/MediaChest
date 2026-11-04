@@ -114,3 +114,14 @@ export const watchedEpisode = pgTable("watched_episode", {
   season: integer("season").notNull(),
   episode: integer("episode").notNull(),
 }, (table) => [uniqueIndex("watched_episode_unique").on(table.watchlistId, table.season, table.episode), check("watched_episode_numbers_check", sql`${table.season} > 0 AND ${table.episode} > 0`)]);
+
+export const mediaAvailability = pgTable("media_availability", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  tmdbId: integer("tmdb_id").notNull(),
+  type: text("type").notNull(),
+  status: text("status").default("to_download").notNull(),
+}, (table) => [
+  uniqueIndex("media_availability_media_idx").on(table.type, table.tmdbId),
+  check("media_availability_type_check", sql`${table.type} IN ('movie', 'tv')`),
+  check("media_availability_status_check", sql`${table.status} IN ('to_download', 'downloaded', 'available')`),
+]);

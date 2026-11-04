@@ -1,3 +1,4 @@
+import { adminRouter } from "./admin.js";
 import { mediaRouter } from "./media.js";
 import express from "express";
 import cors from "cors";
@@ -29,6 +30,7 @@ app.use("/api", async (req, res, next) => {
   }
 });
 app.use("/api/media", mediaRouter);
+app.use("/api/admin", adminRouter);
 app.get("/api/me", (_req, res) => res.json(res.locals.session));
 app.use((_req, res) => res.status(404).json({ message: "Route introuvable." }));
 app.use((error, _req, res, _next) => {

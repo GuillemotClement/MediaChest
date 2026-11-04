@@ -31,6 +31,7 @@ export default function App() {
           {session && <>
             <Link to="/" className="btn btn-ghost btn-sm">Accueil</Link>
             <Link to="/recherche" className="btn btn-ghost btn-sm">Rechercher</Link>
+            {"role" in session.user && session.user.role === "admin" && <Link to="/administration/medias" className="btn btn-ghost btn-sm">Administration</Link>}
             <span className="max-w-40 truncate text-sm">{session.user.displayUsername || session.user.username}</span>
             <button className="btn btn-outline btn-sm" onClick={logout} disabled={signingOut}>
               {signingOut ? "Déconnexion…" : "Se déconnecter"}

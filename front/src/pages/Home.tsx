@@ -5,6 +5,7 @@ type SavedMedia = {
   id: number;
   title: string;
   status: "to_watch" | "watched";
+  availability: "available" | "unavailable";
   episodesWatched: number;
   episodeTotal: number | null;
   releaseDate: string | null;
@@ -134,7 +135,7 @@ export default function Home() {
             <div className="overflow-x-auto">
               <table id="watchlist-results" className="table w-full">
                 <caption className="sr-only">Films et séries de votre liste à voir</caption>
-                <thead><tr><th scope="col" className="w-16">Image</th><th scope="col">Nom</th><th scope="col">Année de sortie</th><th scope="col">Type</th><th scope="col">Statut</th><th scope="col">Actions</th></tr></thead>
+                <thead><tr><th scope="col" className="w-16">Image</th><th scope="col">Nom</th><th scope="col">Année de sortie</th><th scope="col">Type</th><th scope="col">Statut</th><th scope="col">Disponibilité</th><th scope="col">Actions</th></tr></thead>
                 <tbody>
                   {filtered.map((item) => <tr key={item.id} className="cursor-pointer hover:bg-base-200/50" onClick={(event) => {
                     if (!(event.target as HTMLElement).closest("a, button")) navigate(`/medias/${item.id}`);
@@ -144,6 +145,7 @@ export default function Home() {
                     <td>{item.releaseDate?.slice(0, 4) || "Non renseignée"}</td>
                     <td><span className={`badge badge-soft ${item.type === "movie" ? "badge-primary" : "badge-secondary"}`}>{item.type === "movie" ? "Film" : "Série"}</span></td>
                     <td><span className={`badge ${item.status === "watched" ? "badge-success" : "badge-outline"}`}>{item.status === "watched" ? "Vu" : "À voir"}</span>{item.type === "tv" && <span className="mt-2 block whitespace-nowrap text-sm text-base-content/60">{item.episodesWatched}/{item.episodeTotal ?? "—"} épisodes vus</span>}</td>
+                    <td><span className={`badge ${item.availability === "available" ? "badge-success" : "badge-ghost"}`}>{item.availability === "available" ? "Dispo" : "Indisponible"}</span></td>
                     <td>
                       <button type="button" className="btn btn-outline btn-primary btn-sm mb-2 mr-2" disabled={updating.has(item.id) || removing.has(item.id)} onClick={() => void toggleStatus(item)} aria-label={`${item.status === "watched" ? "Remettre à voir" : "Marquer comme vu"} : ${item.title}`}>{updating.has(item.id) ? "Enregistrement…" : item.status === "watched" ? "À voir" : "Marquer vu"}</button>
                       <button type="button" className="btn btn-outline btn-error btn-sm" disabled={removing.has(item.id) || updating.has(item.id)} onClick={() => void remove(item)} aria-label={`Supprimer ${item.title} de ma liste`}>
@@ -152,7 +154,7 @@ export default function Home() {
                       {removeErrors[item.id] && <p role="alert" className="mt-2 text-sm text-error">{removeErrors[item.id]}</p>}
                     </td>
                   </tr>)}
-                  {filtered.length === 0 && <tr><td colSpan={6} className="py-10 text-center text-base-content/60">{query.trim() ? `Aucun média ne correspond à « ${query.trim()} » avec les filtres sélectionnés.` : "Aucun média ne correspond aux filtres sélectionnés."}</td></tr>}
+                  {filtered.length === 0 && <tr><td colSpan={7} className="py-10 text-center text-base-content/60">{query.trim() ? `Aucun média ne correspond à « ${query.trim()} » avec les filtres sélectionnés.` : "Aucun média ne correspond aux filtres sélectionnés."}</td></tr>}
                 </tbody>
               </table>
             </div>

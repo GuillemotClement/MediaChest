@@ -193,3 +193,23 @@ par migration, hormis `gizmo` lors de son initialisation. Les utilisateurs
 conservent l’accès à la recherche, leur liste, les fiches et le suivi personnel.
 Le rôle est retourné avec la session ; aucune interface de gestion
 administrative n’est ajoutée à cette étape.
+
+## Liste globale administrateur
+
+`/administration/medias` regroupe les médias présents dans toutes les listes,
+y compris celle de l’administrateur, une seule fois par paire (type, ID TMDB).
+Le tableau indique les utilisateurs concernés et permet de modifier la
+disponibilité globale : **À télécharger** (par défaut), **Téléchargé**, **Dispo**.
+Ces statuts sont indépendants des statuts personnels À voir/Vu. La navigation
+n’affiche l’administration que pour le rôle `admin` ; chaque lecture et mutation
+est aussi protégée côté serveur avec vérification du rôle actuel en base.
+La migration initialise les médias existants ; un déclencheur SQL initialise
+les futurs ajouts, sans écraser un statut existant. Un média retiré de toutes
+les listes disparaît du tableau ; sa disponibilité reste mémorisée s’il est
+ajouté de nouveau. Aucun téléchargement automatique n’est déclenché.
+
+La liste personnelle affiche une colonne **Disponibilité**, calculée à partir
+du statut global administrateur : **Dispo** uniquement pour le statut Dispo ;
+**Indisponible** pour À télécharger, Téléchargé ou un statut global absent.
+La valeur est commune à tous les utilisateurs ayant ajouté le même média et
+est relue au chargement de leur liste. Le statut personnel À voir/Vu reste séparé.

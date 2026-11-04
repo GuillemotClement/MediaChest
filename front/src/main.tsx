@@ -5,6 +5,7 @@ import App from "./App";
 import RequireAuth from "./components/RequireAuth";
 import Search from "./pages/Search";
 import MediaDetail from "./pages/MediaDetail";
+import AdminMedia from "./pages/AdminMedia";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
           { path: "/", element: <Home /> },
           { path: "/recherche", element: <Search /> },
           { path: "/medias/:id", element: <MediaDetail /> },
+          { path: "/administration/medias", element: <AdminMedia /> },
           { path: "*", element: <NotFound /> },
         ],
       },

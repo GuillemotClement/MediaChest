@@ -29,6 +29,13 @@
       "when": 1793807232056,
       "tag": "0003_user_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793807232057,
+      "tag": "0004_media_availability",
+      "breakpoints": true
     }
   ]
 }
