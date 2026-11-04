@@ -27,6 +27,8 @@ export default function Home() {
   const navigate = useNavigate();
   const [media, setMedia] = useState<SavedMedia[]>([]);
   const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<"" | "movie" | "tv">("");
+  const [statusFilter, setStatusFilter] = useState<"" | "to_watch" | "watched">("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
@@ -85,7 +87,7 @@ export default function Home() {
   }, [attempt]);
 
   const normalizedQuery = normalize(query.trim());
-  const filtered = media.filter((item) => normalize(item.title).includes(normalizedQuery));
+  const filtered = media.filter((item) => (!typeFilter || item.type === typeFilter) && (!statusFilter || item.status === statusFilter) && normalize(item.title).includes(normalizedQuery));
 
   return (
     <section className="space-y-6" aria-labelledby="home-title">
@@ -104,13 +106,31 @@ export default function Home() {
             <input id="watchlist-search" type="search" placeholder="Saisissez le nom d’un film ou d’une série…" aria-describedby="watchlist-search-help" aria-controls="watchlist-results" className="input w-full" value={query} onChange={(event) => setQuery(event.target.value)} disabled={loading || !!error || media.length === 0} />
             <p id="watchlist-search-help" className="mt-2 text-xs text-base-content/60">La liste se filtre au fur et à mesure de votre saisie, par nom, sans distinction de majuscules ni d’accents.</p>
           </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="w-full sm:max-w-xs">
+            <label htmlFor="watchlist-type" className="mb-2 block text-sm font-medium">Type de média</label>
+            <select id="watchlist-type" className="select w-full" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as "" | "movie" | "tv")} aria-controls="watchlist-results" disabled={loading || !!error || media.length === 0}>
+              <option value="">Tous les médias</option>
+              <option value="movie">Films</option>
+              <option value="tv">Séries</option>
+            </select>
+          </div>
+            <div className="w-full sm:max-w-xs">
+              <label htmlFor="watchlist-status" className="mb-2 block text-sm font-medium">Statut</label>
+              <select id="watchlist-status" className="select w-full" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as "" | "to_watch" | "watched")} aria-controls="watchlist-results" disabled={loading || !!error || media.length === 0}>
+                <option value="">Tous les statuts</option>
+                <option value="to_watch">À voir</option>
+                <option value="watched">Vu</option>
+              </select>
+            </div>
+          </div>
         </div>
         <p role="status" className="text-sm text-success">{notice}</p>
         {loading ? <p role="status" className="py-8 text-center">Chargement de votre liste…</p>
           : error ? <div role="alert" className="flex flex-wrap items-center gap-4 py-5"><p className="text-error">{error}</p><button className="btn btn-sm" onClick={() => { setError(""); setLoading(true); setAttempt((value) => value + 1); }}>Réessayer</button></div>
           : media.length === 0 ? <div className="py-10 text-center"><p className="text-lg font-medium">Votre liste est encore vide</p><p className="mt-2 text-base-content/60">Ajoutez un film ou une série depuis la page de recherche pour le retrouver ici.</p><Link to="/recherche" className="btn btn-outline btn-primary mt-5">Trouver mon premier média</Link></div>
           : <>
-            <p role="status" className="mb-3 text-sm text-base-content/60">{filtered.length} média{filtered.length > 1 ? "s" : ""}{query.trim() ? ` sur ${media.length}` : " dans votre liste"}</p>
+            <p role="status" className="mb-3 text-sm text-base-content/60">{filtered.length} média{filtered.length > 1 ? "s" : ""}{query.trim() || typeFilter || statusFilter ? ` sur ${media.length}` : " dans votre liste"}</p>
             <div className="overflow-x-auto">
               <table id="watchlist-results" className="table w-full">
                 <caption className="sr-only">Films et séries de votre liste à voir</caption>
@@ -132,7 +152,7 @@ export default function Home() {
                       {removeErrors[item.id] && <p role="alert" className="mt-2 text-sm text-error">{removeErrors[item.id]}</p>}
                     </td>
                   </tr>)}
-                  {filtered.length === 0 && <tr><td colSpan={6} className="py-10 text-center text-base-content/60">Aucun média ne correspond à « {query.trim()} ».</td></tr>}
+                  {filtered.length === 0 && <tr><td colSpan={6} className="py-10 text-center text-base-content/60">{query.trim() ? `Aucun média ne correspond à « ${query.trim()} » avec les filtres sélectionnés.` : "Aucun média ne correspond aux filtres sélectionnés."}</td></tr>}
                 </tbody>
               </table>
             </div>
