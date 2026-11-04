@@ -327,3 +327,5 @@ PRAGMA temp_store=2;
 [2026-11-04 13:18:29.702 +00:00] [INF] [19] Emby.Server.Implementations.Session.SessionManager: Current/Max sessions for user "gizmo": 1/0
 [2026-11-04 13:18:29.703 +00:00] [INF] [19] Emby.Server.Implementations.Session.SessionManager: Creating new access token for user 3a40950a-d50e-4346-82d3-97a92b114bef
 [2026-11-04 13:18:29.772 +00:00] [ERR] [10] Jellyfin.Api.Middleware.ExceptionMiddleware: Error processing request: "Token is required". URL "GET" "/socket".
+[2026-11-04 13:32:05.191 +00:00] [INF] [34] Emby.Server.Implementations.HttpServer.WebSocketManager: WS "192.168.1.187" closed
+[2026-11-04 13:32:05.732 +00:00] [INF] [22] Emby.Server.Implementations.HttpServer.WebSocketManager: WS "192.168.1.187" request
