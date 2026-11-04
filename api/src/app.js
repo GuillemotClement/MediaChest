@@ -1,3 +1,4 @@
+import { mediaRouter } from "./media.js";
 import express from "express";
 import cors from "cors";
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
@@ -27,9 +28,11 @@ app.use("/api", async (req, res, next) => {
     next(error);
   }
 });
+app.use("/api/media", mediaRouter);
 app.get("/api/me", (_req, res) => res.json(res.locals.session));
 app.use((_req, res) => res.status(404).json({ message: "Route introuvable." }));
 app.use((error, _req, res, _next) => {
+  if ([429, 502, 503].includes(error.status)) return res.status(error.status).json({ message: error.message });
   console.error(error);
   res.status(500).json({ message: "Une erreur serveur est survenue." });
 });

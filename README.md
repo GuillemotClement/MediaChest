@@ -118,3 +118,26 @@ cd front
 corepack pnpm exec playwright install chromium
 corepack pnpm test:e2e
 ```
+
+## Recherche de films et séries (TMDB)
+
+La page `/recherche`, réservée aux utilisateurs connectés, recherche un titre en
+français parmi les films ou les séries. Les résultats sont paginés et permettent
+d’ajouter un média à la liste personnelle, conservée dans PostgreSQL. Un même
+média ne peut être ajouté qu’une fois par utilisateur et par type. La page de
+consultation de cette liste sera ajoutée dans une prochaine étape.
+
+Créer un compte sur https://www.themoviedb.org puis demander un accès API dans
+les paramètres : https://www.themoviedb.org/settings/api. Copier le **API Read
+Access Token** dans le `.env` racine pour Docker :
+
+```dotenv
+TMDB_READ_ACCESS_TOKEN=votre_jeton
+```
+
+Puis relancer `docker compose up -d api`. En développement sans Docker, mettre
+cette variable dans `api/.env`. Le jeton n’est jamais envoyé au navigateur.
+Sans jeton, la page affiche une indisponibilité explicite ; aucun résultat de
+démonstration n’est présenté comme une vraie recherche. Les données et images
+proviennent de TMDB ; l’usage non commercial est gratuit avec attribution,
+l’usage commercial nécessite une licence adaptée.

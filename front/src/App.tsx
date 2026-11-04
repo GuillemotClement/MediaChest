@@ -30,6 +30,7 @@ export default function App() {
           <Link to="/" className="mr-auto text-xl font-bold">MediaChest</Link>
           {session && <>
             <Link to="/" className="btn btn-ghost btn-sm">Accueil</Link>
+            <Link to="/recherche" className="btn btn-ghost btn-sm">Rechercher</Link>
             <span className="max-w-40 truncate text-sm">{session.user.displayUsername || session.user.username}</span>
             <button className="btn btn-outline btn-sm" onClick={logout} disabled={signingOut}>
               {signingOut ? "Déconnexion…" : "Se déconnecter"}

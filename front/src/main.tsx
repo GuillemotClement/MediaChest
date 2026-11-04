@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import App from "./App";
 import RequireAuth from "./components/RequireAuth";
+import Search from "./pages/Search";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
         element: <RequireAuth />,
         children: [
           { path: "/", element: <Home /> },
+          { path: "/recherche", element: <Search /> },
           { path: "*", element: <NotFound /> },
         ],
       },
