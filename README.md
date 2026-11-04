@@ -170,3 +170,26 @@ Le total est récupéré à l’ajout, actualisé à l’ouverture de la fiche e
 pour les anciennes séries lors de la consultation de la liste. Si TMDB est
 indisponible et le total encore inconnu, le tableau affiche `—` pour le total.
 Les progressions sont privées et supprimées avec l’entrée de la liste.
+
+## Compte administrateur et rôles
+
+Au démarrage de l’API, après les migrations, le compte initial est créé :
+
+- Identifiant : `gizmo`
+- Email : `guillemot.clement35@gmail.com`
+- Mot de passe initial : `password`
+- Rôle : `admin`
+
+Si le compte local `gizmo` existait avec une adresse interne `@users.invalid`,
+il est converti une seule fois : sa liste et sa progression sont conservées,
+l’email et le mot de passe initial ci-dessus sont appliqués, ses anciennes
+sessions sont révoquées. Une fois administrateur, son mot de passe n’est plus
+réinitialisé aux démarrages suivants. Un conflit avec un autre compte empêche
+l’initialisation et est signalé dans les logs.
+
+Toutes les inscriptions publiques reçoivent le rôle `user` ; ce rôle ne peut pas
+être choisi par le client. Les comptes existants reçoivent également `user`
+par migration, hormis `gizmo` lors de son initialisation. Les utilisateurs
+conservent l’accès à la recherche, leur liste, les fiches et le suivi personnel.
+Le rôle est retourné avec la session ; aucune interface de gestion
+administrative n’est ajoutée à cette étape.

@@ -60,11 +60,12 @@ test("username-only authentication lifecycle and access control", async () => {
   assert.equal(weak.status, 400);
   const username = "Media_Tester";
   const password = "correct-test-password-123";
-  const signup = await request("/api/auth/sign-up/email", { username, password });
+  const signup = await request("/api/auth/sign-up/email", { username, password, role: "admin" });
   assert.equal(signup.status, 200, await signup.clone().text());
   const signupData = await signup.json();
   assert.equal(signupData.user.username, username.toLowerCase());
   assert.match(signupData.user.email, /@users\.invalid$/);
+  assert.equal(signupData.user.role, "user");
   let cookie = cookies(signup);
   assert.ok(cookie.includes("session_token="));
   assert.equal((await request("/api/me", undefined, cookie)).status, 200);
@@ -82,11 +83,44 @@ test("username-only authentication lifecycle and access control", async () => {
   cookie = cookies(signin);
   const session = await request("/api/me", undefined, cookie);
   assert.equal(session.status, 200);
-  assert.equal((await session.json()).user.username, username.toLowerCase());
+  const sessionData = await session.json();
+  assert.equal(sessionData.user.username, username.toLowerCase());
+  assert.equal(sessionData.user.role, "user");
+  assert.equal((await request("/api/media/watchlist", undefined, cookie)).status, 200);
   const stored = await pool.query('SELECT password FROM account WHERE user_id = $1', [signupData.user.id]);
   assert.notEqual(stored.rows[0].password, password);
   assert.ok(stored.rows[0].password.length > 40);
   // Four signup requests above, then the fifth is allowed and the sixth is limited.
   assert.equal((await request("/api/auth/sign-up/email", { username: "!", password })).status, 400);
   assert.equal((await request("/api/auth/sign-up/email", { username: "!", password })).status, 429);
+});
+
+test("administrator bootstrap is atomic, idempotent and upgrades legacy gizmo without losing media", async () => {
+  const { ensureAdministrator } = await import("../src/bootstrap-admin.js");
+  const { hashPassword, verifyPassword } = await import("better-auth/crypto");
+  const initialized = await Promise.all([ensureAdministrator(), ensureAdministrator()]);
+  assert.equal(initialized.filter(result => result.created).length, 1);
+  const stored = await pool.query('SELECT * FROM "user" WHERE username = $1', ["gizmo"]);
+  assert.equal(stored.rowCount, 1);
+  assert.equal(stored.rows[0].email, "guillemot.clement35@gmail.com");
+  assert.equal(stored.rows[0].role, "admin");
+  const login = await request("/api/auth/sign-in/username", { username: "gizmo", password: "password" });
+  assert.equal(login.status, 200, await login.clone().text());
+  const adminCookie = cookies(login);
+  const me = await (await request("/api/me", undefined, adminCookie)).json();
+  assert.equal(me.user.role, "admin");
+  assert.equal((await request("/api/media/watchlist", undefined, adminCookie)).status, 200);
+  const changedHash = await hashPassword("a-new-test-password-123");
+  await pool.query("UPDATE account SET password = $1 WHERE user_id = $2", [changedHash, me.user.id]);
+  assert.equal((await ensureAdministrator()).created, false);
+  assert.equal((await pool.query("SELECT password FROM account WHERE user_id = $1", [me.user.id])).rows[0].password, changedHash);
+  // Simulate the existing local gizmo account from before roles were introduced.
+  await pool.query('UPDATE "user" SET role = $1, email = $2 WHERE id = $3', ["user", "legacy@users.invalid", me.user.id]);
+  await pool.query("INSERT INTO watchlist (user_id, tmdb_id, type, title, overview) VALUES ($1, 42, 'movie', 'Preserved film', '')", [me.user.id]);
+  assert.equal((await ensureAdministrator()).id, me.user.id);
+  assert.equal((await pool.query("SELECT count(*)::int AS count FROM watchlist WHERE user_id = $1", [me.user.id])).rows[0].count, 1);
+  assert.equal((await request("/api/me", undefined, adminCookie)).status, 401);
+  const credential = (await pool.query("SELECT password FROM account WHERE user_id = $1", [me.user.id])).rows[0].password;
+  assert.notEqual(credential, "password");
+  assert.ok(await verifyPassword({ hash: credential, password: "password" }));
 });

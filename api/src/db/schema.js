@@ -6,6 +6,7 @@ export const user = pgTable("user", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   username: text("username").notNull().unique(),
+  role: text("role").default("user").notNull(),
   displayUsername: text("display_username"),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
@@ -14,7 +15,7 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-});
+}, (table) => [check("user_role_check", sql`${table.role} IN ('user', 'admin')`)]);
 
 export const session = pgTable(
   "session",

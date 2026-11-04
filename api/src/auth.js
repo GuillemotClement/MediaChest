@@ -14,6 +14,7 @@ export const auth = betterAuth({
   advanced: { ipAddress: { ipAddressHeaders: ["x-mediachest-client-ip"] } },
   trustedOrigins: [config.frontOrigin],
   database: drizzleAdapter(db, { provider: "pg", schema }),
+  user: { additionalFields: { role: { type: "string", defaultValue: "user", input: false } } },
   emailAndPassword: { enabled: true, minPasswordLength: 8, maxPasswordLength: 128 },
   plugins: [username({ minUsernameLength: 3, maxUsernameLength: 30 })],
   disabledPaths: ["/sign-in/email", "/change-email", "/update-user", "/request-password-reset", "/reset-password"],
@@ -33,12 +34,16 @@ export const auth = betterAuth({
           message: "L’identifiant doit contenir 3 à 30 lettres, chiffres, points ou underscores.",
         });
       }
+      if (login.toLowerCase() === "gizmo") {
+        throw new APIError("BAD_REQUEST", { message: "Cet identifiant est réservé à l’administrateur." });
+      }
       // Better Auth requires an email internally; no deliverable address is collected.
       return {
         context: {
           ...ctx,
           body: {
             ...ctx.body,
+            role: "user",
             username: login.toLowerCase(),
             displayUsername: login,
             name: login,
