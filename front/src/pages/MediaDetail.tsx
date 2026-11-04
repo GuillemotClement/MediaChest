@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import WatchProgress from "../components/WatchProgress";
 import { Link, useParams } from "react-router";
 
 type Detail = {
+  savedId: number; watchStatus: "to_watch" | "watched"; episodeTotal: number | null; episodesWatched: number;
+  seasonList: { number: number; name: string; episodeCount: number }[];
   title: string; originalTitle: string; type: "movie" | "tv";
   overview: string; posterUrl: string | null; releaseDate: string | null;
   tagline: string; genres: string[]; runtime: number | null; episodeRuntime: number | null;
@@ -75,7 +78,7 @@ export default function MediaDetail() {
             <div><dt className="text-sm text-base-content/60">{media.type === "movie" ? "Date de sortie" : "Première diffusion"}</dt><dd className="mt-1 font-medium">{date(media.releaseDate)}</dd></div>
             <div><dt className="text-sm text-base-content/60">{media.type === "movie" ? "Durée" : "Durée d’un épisode"}</dt><dd className="mt-1 font-medium">{duration(media.type === "movie" ? media.runtime : media.episodeRuntime)}</dd></div>
             <div><dt className="text-sm text-base-content/60">{media.type === "movie" ? "Réalisation" : "Création"}</dt><dd className="mt-1 font-medium">{media.authors.join(", ") || "Non renseignée"}</dd></div>
-            <div><dt className="text-sm text-base-content/60">Statut</dt><dd className="mt-1 font-medium">{media.status ? statuses[media.status] || media.status : "Non renseigné"}</dd></div>
+            <div><dt className="text-sm text-base-content/60">Statut de production</dt><dd className="mt-1 font-medium">{media.status ? statuses[media.status] || media.status : "Non renseigné"}</dd></div>
             {media.type === "tv" && <><div><dt className="text-sm text-base-content/60">Saisons et épisodes</dt><dd className="mt-1 font-medium">{media.seasons ?? "—"} saison(s) · {media.episodes ?? "—"} épisode(s)</dd></div><div><dt className="text-sm text-base-content/60">Dernière diffusion</dt><dd className="mt-1 font-medium">{date(media.lastAirDate)}</dd></div></>}
             <div><dt className="text-sm text-base-content/60">Pays de production</dt><dd className="mt-1 font-medium">{media.countries.join(", ") || "Non renseignés"}</dd></div>
             <div><dt className="text-sm text-base-content/60">Langues</dt><dd className="mt-1 font-medium">{media.languages.join(", ") || "Non renseignées"}</dd></div>
@@ -83,6 +86,7 @@ export default function MediaDetail() {
           </dl>
         </div>
       </article>
+      <WatchProgress key={media.savedId} {...media} />
       <section aria-labelledby="cast-title" className="rounded-box border border-base-300 bg-base-100 p-5 sm:p-8">
         <h2 id="cast-title" className="text-2xl font-bold">Acteurs principaux</h2>
         {media.cast.length === 0 ? <p className="mt-4 text-base-content/60">La distribution n’est pas disponible.</p>

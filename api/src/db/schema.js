@@ -103,5 +103,13 @@ export const watchlist = pgTable("watchlist", {
   overview: text("overview").notNull(),
   posterUrl: text("poster_url"),
   releaseDate: text("release_date"),
+  status: text("status").default("to_watch").notNull(),
+  episodeTotal: integer("episode_total"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-}, (table) => [uniqueIndex("watchlist_user_media_idx").on(table.userId, table.type, table.tmdbId), check("watchlist_type_check", sql`${table.type} IN ('movie', 'tv')`)]);
+}, (table) => [check("watchlist_status_check", sql`${table.status} IN ('to_watch', 'watched')`), uniqueIndex("watchlist_user_media_idx").on(table.userId, table.type, table.tmdbId), check("watchlist_type_check", sql`${table.type} IN ('movie', 'tv')`)]);
+
+export const watchedEpisode = pgTable("watched_episode", {
+  watchlistId: integer("watchlist_id").notNull().references(() => watchlist.id, { onDelete: "cascade" }),
+  season: integer("season").notNull(),
+  episode: integer("episode").notNull(),
+}, (table) => [uniqueIndex("watched_episode_unique").on(table.watchlistId, table.season, table.episode), check("watched_episode_numbers_check", sql`${table.season} > 0 AND ${table.episode} > 0`)]);

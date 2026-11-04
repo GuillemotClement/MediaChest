@@ -29,6 +29,9 @@ before(async () => {
     assert.equal(options.headers.Authorization, "Bearer test-token");
     if (upstreamStatus !== 200) return new Response("{}", { status: upstreamStatus });
     const parsed = new URL(url);
+    if (parsed.pathname.includes("/season/")) {
+      return Response.json({ episodes: [{ episode_number: 1, name: "Pilote", air_date: "2023-01-01" }, { episode_number: 2, name: "La suite", air_date: "2023-01-08" }] });
+    }
     if (parsed.pathname.endsWith("/multi")) {
       const results = parsed.searchParams.get("query") === "people-first" && parsed.searchParams.get("page") === "1"
         ? [{ id: 1, media_type: "person", name: "Personne exclue" }]
@@ -39,6 +42,7 @@ before(async () => {
     const media = { id: 42, title: "Film test", name: "Série test", overview: "Résumé", poster_path: "/test.jpg", release_date: "2024-01-01", first_air_date: "2023-01-01" };
     return Response.json(String(url).includes("/search/") ? { page: 1, total_pages: 2, total_results: 21, results: [media] } : {
       ...media, name: tv ? "Série test" : undefined,
+      seasons: [{ season_number: 0, episode_count: 5, name: "Spéciaux" }, { season_number: 1, episode_count: 2, name: "Saison 1" }],
       runtime: 155, number_of_seasons: 3, number_of_episodes: 24, episode_run_time: [45],
       genres: [{ name: "Science-fiction" }], tagline: "Une aventure", vote_count: 10, vote_average: 8.2,
       created_by: [{ name: "Créatrice test" }],
@@ -134,6 +138,13 @@ test("authenticated media search, validation, TMDB failures and private idempote
   assert.equal(movieDetail.cast[0].name, "Acteur film");
   assert.equal(movieDetail.cast[0].character, "Paul");
   assert.equal(movieDetail.seasons, null);
+  assert.equal(movieDetail.watchStatus, "to_watch");
+  assert.equal((await request(`/api/media/watchlist/${movieId}/status`, otherCookie, { status: "watched" }, "PATCH")).status, 404);
+  assert.equal((await request(`/api/media/watchlist/${movieId}/status`, cookie, { status: "invalid" }, "PATCH")).status, 400);
+  const filmSeen = await request(`/api/media/watchlist/${movieId}/status`, cookie, { status: "watched" }, "PATCH");
+  assert.equal((await filmSeen.json()).watchStatus, "watched");
+  assert.equal((await (await request(`/api/media/watchlist/${movieId}`, cookie)).json()).watchStatus, "watched");
+  await request(`/api/media/watchlist/${movieId}/status`, cookie, { status: "to_watch" }, "PATCH");
   assert.equal(calls.at(-1).searchParams.get("append_to_response"), "credits");
   assert.equal((await request("/api/media/watchlist", cookie, { id: 42, type: "tv" })).status, 201);
   const seriesId = (await pool.query("SELECT id FROM watchlist WHERE type = 'tv'")).rows[0].id;
@@ -145,7 +156,41 @@ test("authenticated media search, validation, TMDB failures and private idempote
   assert.deepEqual(seriesDetail.authors, ["Créatrice test"]);
   assert.equal(seriesDetail.cast[0].character, "Jessica");
   assert.equal(calls.at(-1).searchParams.get("append_to_response"), "aggregate_credits");
+  assert.equal(seriesDetail.watchStatus, "to_watch");
+  assert.equal(seriesDetail.episodesWatched, 0);
+  assert.equal(seriesDetail.episodeTotal, 2);
+  assert.equal(seriesDetail.seasonList.length, 1);
+  const episodePath = `/api/media/watchlist/${seriesId}/seasons/1/episodes/`;
+  assert.equal((await request(episodePath + 1, null, { watched: true }, "PUT")).status, 401);
+  assert.equal((await request(episodePath + 1, otherCookie, { watched: true }, "PUT")).status, 404);
+  assert.equal((await request(episodePath + 99, cookie, { watched: true }, "PUT")).status, 400);
+  assert.equal((await request(episodePath + 1, cookie, { watched: "yes" }, "PUT")).status, 400);
+  const season = await (await request(`/api/media/watchlist/${seriesId}/seasons/1`, cookie)).json();
+  assert.equal(season.episodes.length, 2);
+  assert.equal(season.episodes[0].watched, false);
+  const mark = episode => request(episodePath + episode, cookie, { watched: true }, "PUT");
+  const first = await (await mark(1)).json();
+  assert.equal(first.episodesWatched, 1);
+  assert.equal(first.watchStatus, "to_watch");
+  assert.equal((await (await mark(1)).json()).episodesWatched, 1);
+  await Promise.all([mark(1), mark(2)]);
+  const completed = await (await request(`/api/media/watchlist/${seriesId}`, cookie)).json();
+  assert.equal(completed.episodesWatched, 2);
+  assert.equal(completed.watchStatus, "watched");
+  const listedSeries = (await (await request("/api/media/watchlist", cookie)).json()).results.find(item => item.id === seriesId);
+  assert.equal(listedSeries.episodesWatched, 2);
+  assert.equal(listedSeries.episodeTotal, 2);
+  assert.equal(listedSeries.status, "watched");
+  const unchecked = await (await request(episodePath + 1, cookie, { watched: false }, "PUT")).json();
+  assert.equal(unchecked.episodesWatched, 1);
+  assert.equal(unchecked.watchStatus, "to_watch");
+  const reset = await (await request(`/api/media/watchlist/${seriesId}/status`, cookie, { status: "to_watch" }, "PATCH")).json();
+  assert.equal(reset.episodesWatched, 0);
+  const allSeen = await (await request(`/api/media/watchlist/${seriesId}/status`, cookie, { status: "watched" }, "PATCH")).json();
+  assert.equal(allSeen.episodesWatched, 2);
+  assert.equal(allSeen.watchStatus, "watched");
   await request(`/api/media/watchlist/${seriesId}`, cookie, undefined, "DELETE");
+  assert.equal((await pool.query("SELECT count(*)::int AS count FROM watched_episode")).rows[0].count, 0);
   upstreamStatus = 500;
   assert.equal((await request(`/api/media/watchlist/${movieId}`, cookie)).status, 502);
   upstreamStatus = 200;

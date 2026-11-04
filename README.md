@@ -155,3 +155,18 @@ résumé, date, genres, durée, réalisation ou créateurs, note et distribution
 (jusqu’à dix acteurs). Pour les séries : saisons, épisodes, dernière diffusion
 et distribution sur l’ensemble des saisons. Les informations manquantes sont
 signalées ; un échec de TMDB permet de réessayer. Le jeton TMDB est requis.
+
+## Statuts et épisodes vus
+
+Chaque ajout (y compris les entrées existantes après migration) démarre « À voir ».
+Le tableau et la fiche permettent de marquer un film ou toute une série « Vu » et
+de revenir à « À voir ». Sur la fiche d’une série, sélectionner une saison puis
+cocher/décocher les épisodes vus. Le compteur du tableau indique par exemple
+`10/24 épisodes vus`. Les saisons spéciales (saison 0) sont exclues du suivi.
+Le statut d’une série devient automatiquement « Vu » quand tous ses épisodes
+sont cochés ; décocher un épisode la remet « À voir ». « Tout remettre à voir »
+efface le suivi des épisodes ; « Tout marquer vu » coche toutes les saisons.
+Le total est récupéré à l’ajout, actualisé à l’ouverture de la fiche et initialisé
+pour les anciennes séries lors de la consultation de la liste. Si TMDB est
+indisponible et le total encore inconnu, le tableau affiche `—` pour le total.
+Les progressions sont privées et supprimées avec l’entrée de la liste.
