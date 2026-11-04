@@ -124,3 +124,29 @@ test("administrator bootstrap is atomic, idempotent and upgrades legacy gizmo wi
   assert.notEqual(credential, "password");
   assert.ok(await verifyPassword({ hash: credential, password: "password" }));
 });
+
+test("production bootstrap uses configured password and refuses weak initial credentials", async () => {
+  const { ensureAdministrator } = await import("../src/bootstrap-admin.js");
+  const previousMode = process.env.NODE_ENV;
+  const previousPassword = process.env.ADMIN_INITIAL_PASSWORD;
+  try {
+    await pool.query('DELETE FROM "user" WHERE username = $1', ["gizmo"]);
+    process.env.NODE_ENV = "production";
+    delete process.env.ADMIN_INITIAL_PASSWORD;
+    await assert.rejects(ensureAdministrator(), /ADMIN_INITIAL_PASSWORD/);
+    process.env.ADMIN_INITIAL_PASSWORD = "password";
+    await assert.rejects(ensureAdministrator(), /ADMIN_INITIAL_PASSWORD/);
+    assert.equal((await pool.query('SELECT count(*)::int AS count FROM "user" WHERE username = $1', ["gizmo"])).rows[0].count, 0);
+    process.env.ADMIN_INITIAL_PASSWORD = "production-test-password-123";
+    await ensureAdministrator();
+    const login = await request("/api/auth/sign-in/username", { username: "gizmo", password: process.env.ADMIN_INITIAL_PASSWORD });
+    assert.equal(login.status, 200);
+    assert.equal((await login.json()).user.role, "admin");
+    process.env.ADMIN_INITIAL_PASSWORD = "another-initial-password-123";
+    assert.equal((await ensureAdministrator()).created, false);
+    assert.equal((await request("/api/auth/sign-in/username", { username: "gizmo", password: "production-test-password-123" })).status, 200);
+  } finally {
+    if (previousMode === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = previousMode;
+    if (previousPassword === undefined) delete process.env.ADMIN_INITIAL_PASSWORD; else process.env.ADMIN_INITIAL_PASSWORD = previousPassword;
+  }
+});

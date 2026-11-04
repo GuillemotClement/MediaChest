@@ -11,7 +11,7 @@ export const auth = betterAuth({
   appName: "MediaChest",
   baseURL: config.authUrl,
   secret: config.authSecret,
-  advanced: { ipAddress: { ipAddressHeaders: ["x-mediachest-client-ip"] } },
+  advanced: { useSecureCookies: config.authUrl.startsWith("https://"), ipAddress: { ipAddressHeaders: ["x-mediachest-client-ip"] } },
   trustedOrigins: [config.frontOrigin],
   database: drizzleAdapter(db, { provider: "pg", schema }),
   user: { additionalFields: { role: { type: "string", defaultValue: "user", input: false } } },

@@ -19,7 +19,11 @@ export async function ensureAdministrator() {
     if (existing?.role === "admin") return { created: false, id: existing.id };
 
     const id = existing?.id || randomUUID();
-    const password = await hashPassword("password");
+    const initialPassword = process.env.ADMIN_INITIAL_PASSWORD || (process.env.NODE_ENV === "production" ? "" : "password");
+    if (process.env.NODE_ENV === "production" && (initialPassword.length < 12 || initialPassword === "password")) {
+      throw new Error("ADMIN_INITIAL_PASSWORD doit contenir au moins 12 caractères en production.");
+    }
+    const password = await hashPassword(initialPassword);
     if (existing) {
       // Upgrade the pre-existing local gizmo account, preserving its library.
       await tx.update(user).set({ email, role: "admin", updatedAt: new Date() }).where(eq(user.id, id));

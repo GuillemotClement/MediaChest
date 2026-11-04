@@ -4,19 +4,28 @@ import express from "express";
 import cors from "cors";
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { auth } from "./auth.js";
+import { pool } from "./db/index.js";
 import { config } from "./config.js";
 
 export const app = express();
 app.disable("x-powered-by");
+if (config.trustProxy) app.set("trust proxy", 1);
 app.use(cors({ origin: config.frontOrigin, credentials: true }));
 // Overwrite this header from the socket so clients cannot spoof the rate-limit IP.
 app.use((req, _res, next) => {
-  req.headers["x-mediachest-client-ip"] = req.socket.remoteAddress;
+  req.headers["x-mediachest-client-ip"] = config.trustProxy ? req.ip : req.socket.remoteAddress;
   next();
 });
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json({ limit: "16kb" }));
-app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
+app.get("/api/health", async (_req, res) => {
+  try {
+    await pool.query("select 1");
+    res.json({ status: "ok" });
+  } catch {
+    res.status(503).json({ status: "unavailable" });
+  }
+});
 
 // Every application endpoint mounted below this middleware requires a live session.
 app.use("/api", async (req, res, next) => {

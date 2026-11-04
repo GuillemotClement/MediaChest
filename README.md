@@ -2,6 +2,13 @@
 
 Bibliothèque multimédia avec un frontend React/Vite et une API Express en JavaScript.
 
+## Production sur Raspberry Pi
+
+La configuration locale de production, les sauvegardes et la procédure de
+déploiement sont documentées dans [deploy/raspberry-pi.md](deploy/raspberry-pi.md).
+Utiliser `compose.prod.yml` via `sh scripts/prod-compose.sh`, avec un `.env.prod`
+distinct. Le Compose ci-dessous reste destiné au développement.
+
 ## Démarrage avec Docker Compose
 
 Prérequis : Docker avec Docker Compose.
@@ -75,7 +82,10 @@ Le front écoute sur http://localhost:5173 et l’API locale sur http://localhos
 
 Vite relaie `/api` vers Express ; utiliser le même nom d’hôte (`localhost`) pour le front et l’API.
 Pour déployer, servir le front et relayer `/api` vers Express sous la même origine HTTPS, puis adapter `BETTER_AUTH_URL`, `FRONTEND_URL` et `DATABASE_URL`.
-La limitation des tentatives est en mémoire et utilise l’adresse du socket. Derrière un proxy, elle regroupe les clients par proxy ; adapter les proxys de confiance et le stockage partagé pour un déploiement multi-instance.
+La limitation des tentatives est en mémoire. En production, le proxy Nginx unique
+remplace les en-têtes client et l’API lui fait confiance pour identifier l’adresse
+source. Cette configuration cible une seule instance ; un déploiement
+multi-instance nécessiterait un stockage de limitation partagé.
 
 ## Base de données
 
@@ -177,7 +187,7 @@ Au démarrage de l’API, après les migrations, le compte initial est créé :
 
 - Identifiant : `gizmo`
 - Email : `guillemot.clement35@gmail.com`
-- Mot de passe initial : `password`
+- Mot de passe initial : `password` en développement ; `ADMIN_INITIAL_PASSWORD` en production
 - Rôle : `admin`
 
 Si le compte local `gizmo` existait avec une adresse interne `@users.invalid`,
@@ -191,8 +201,8 @@ Toutes les inscriptions publiques reçoivent le rôle `user` ; ce rôle ne peut 
 être choisi par le client. Les comptes existants reçoivent également `user`
 par migration, hormis `gizmo` lors de son initialisation. Les utilisateurs
 conservent l’accès à la recherche, leur liste, les fiches et le suivi personnel.
-Le rôle est retourné avec la session ; aucune interface de gestion
-administrative n’est ajoutée à cette étape.
+Le rôle est retourné avec la session ; l’administration des médias est décrite
+ci-dessous.
 
 ## Liste globale administrateur
 
