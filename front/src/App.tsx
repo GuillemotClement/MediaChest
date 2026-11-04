@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import { authClient } from "./lib/auth-client";
+import Footer from "./layout/footer/Footer";
+import Header from "./layout/header/Header";
 
 export default function App() {
   const { data: session, refetch } = authClient.useSession();
@@ -25,7 +27,10 @@ export default function App() {
 
   return (
     <div className="flex min-h-dvh flex-col bg-base-200">
-      <header className="border-b border-base-300 bg-base-100">
+
+      <Header session={session} signOut={signingOut} logout={logout} />
+
+      {/* <header className="border-b border-base-300 bg-base-100">
         <nav aria-label="Navigation principale" className="navbar mx-auto max-w-6xl flex-wrap gap-3 px-4">
           <Link to="/" className="mr-auto text-xl font-bold">MediaChest</Link>
           {session && <>
@@ -38,14 +43,14 @@ export default function App() {
             </button>
           </>}
         </nav>
-      </header>
+      </header> */}
+
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
         {error && <p role="alert" className="mb-4 text-error">{error}</p>}
         <Outlet />
       </main>
-      <footer className="border-t border-base-300 bg-base-100 px-4 py-5 text-center text-sm text-base-content/60">
-        MediaChest — Votre bibliothèque multimédia
-      </footer>
+
+      <Footer />
     </div>
   );
 }
