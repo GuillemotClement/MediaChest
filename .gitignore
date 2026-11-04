@@ -1,10 +1,9 @@
-media/films/*
-!media/films/.gitkeep
-media/series/*
-!media/series/.gitkeep
+node_modules/
+dist/
+# .env
+# .env.*
+!.env.example
+*.tsbuildinfo
 
-cache/*
-!cache/.gitkeep
-
-config/*
-!config/.gitkeep
+playwright-report/
+test-results/

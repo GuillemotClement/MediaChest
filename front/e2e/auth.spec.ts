@@ -1,0 +1,37 @@
+import { expect, test } from "@playwright/test";
+
+test("inscription, session persistante, logout et connexion par identifiant", async ({ page }) => {
+  const username = `Browser_${crypto.randomUUID().slice(0, 8)}`;
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/connexion$/);
+  await expect(page.getByRole("heading", { name: "Connexion", exact: true })).toBeVisible();
+  await expect(page.getByText("Bienvenue sur MediaChest")).toHaveCount(0);
+  await page.getByRole("link", { name: "Créer un compte" }).click();
+  await expect(page.getByRole("heading", { name: "Créer un compte", exact: true })).toBeVisible();
+  await page.getByLabel("Identifiant", { exact: true }).fill(username);
+  await page.getByLabel("Mot de passe", { exact: true }).fill("browser-test-password-123");
+  await page.getByLabel("Confirmer le mot de passe").fill("different-password");
+  await expect(page.getByLabel("Identifiant", { exact: true })).toHaveValue(username);
+  await page.getByRole("button", { name: "S’inscrire" }).click();
+  await expect(page.getByRole("alert")).toHaveText("Les mots de passe ne correspondent pas.");
+  await page.getByLabel("Confirmer le mot de passe").fill("browser-test-password-123");
+  await page.getByRole("button", { name: "S’inscrire" }).click();
+  await expect(page.getByRole("heading", { name: "Bienvenue sur MediaChest" })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Bienvenue sur MediaChest" })).toBeVisible();
+  await page.getByRole("button", { name: "Se déconnecter" }).click();
+  await expect(page).toHaveURL(/\/connexion$/);
+  expect((await page.request.get("/api/me")).status()).toBe(401);
+  await page.goto("/page-privee");
+  await expect(page).toHaveURL(/\/connexion$/);
+  await page.getByLabel("Identifiant", { exact: true }).fill(username.toUpperCase());
+  await page.getByLabel("Mot de passe", { exact: true }).fill("wrong-password");
+  await page.getByRole("button", { name: "Se connecter" }).click();
+  await expect(page.getByRole("alert")).toHaveText("Identifiant ou mot de passe incorrect.");
+  await page.getByLabel("Mot de passe", { exact: true }).fill("browser-test-password-123");
+  await page.getByRole("button", { name: "Se connecter" }).click();
+  await expect(page).toHaveURL(/\/page-privee$/);
+  await expect(page.getByRole("heading", { name: "Page introuvable" })).toBeVisible();
+  await page.goto("/connexion");
+  await expect(page).toHaveURL("/");
+});

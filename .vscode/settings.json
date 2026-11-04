@@ -1,0 +1,50 @@
+{
+  // "java.configuration.updateBuildConfiguration": "interactive",
+  "files.associations": {
+    "*.dbclient-js": "javascript",
+    "*.css": "tailwindcss"
+  },
+  // parametre user
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "[html][angular-html][javascript][typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // test theme
+  // Éditeur : texte et lignes plus espacés
+  // "editor.fontSize": 14,
+  // "editor.lineHeight": 23,
+  // "editor.letterSpacing": 0.5,
+  // "editor.padding.top": 0,
+  // "editor.padding.bottom": 0,
+  // "editor.rulers": [100],
+
+  // Suggestions et paramètres
+  // "editor.suggestFontSize": 14,
+  // "editor.suggestLineHeight": 23,
+  // "editor.parameterHints.enabled": true,
+
+  // Explorateur : lignes plus hautes
+  // "workbench.tree.indent": ,
+
+  // Onglets plus hauts
+  "window.density.editorTabHeight": "default",
+
+  // configuration icone dossier
+  "catppuccin-icons.specificFolders": true,
+  "catppuccin-icons.associations.folders": {
+    "features": "folder_types",
+    "dto": "folder_types",
+    "entity": "folder_database",
+    "mapper": "folder_utils",
+    "service": "folder_components",
+    "resources": "folder_config",
+    "alfredapi": "folder_server",
+    "front": "folder_client",
+    "repository": "folder_database"
+  },
+  // option sonore
+  "accessibility.signalOptions.volume": 0
+}
