@@ -1,2 +1,10 @@
 media/films/*
+!media/films/.gitkeep
 media/series/*
+!media/series/.gitkeep
+
+cache/*
+!cache/.gitkeep
+
+config/*
+!config/.gitkeep

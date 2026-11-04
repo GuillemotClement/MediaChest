@@ -329,3 +329,47 @@ PRAGMA temp_store=2;
 [2026-11-04 13:18:29.772 +00:00] [ERR] [10] Jellyfin.Api.Middleware.ExceptionMiddleware: Error processing request: "Token is required". URL "GET" "/socket".
 [2026-11-04 13:32:05.191 +00:00] [INF] [34] Emby.Server.Implementations.HttpServer.WebSocketManager: WS "192.168.1.187" closed
 [2026-11-04 13:32:05.732 +00:00] [INF] [22] Emby.Server.Implementations.HttpServer.WebSocketManager: WS "192.168.1.187" request
+[2026-11-04 13:33:28.739 +00:00] [INF] [22] Emby.Server.Implementations.Session.SessionManager: Logging out access token "256e05a1bcfc4c42a363838029b68bd7"
+[2026-11-04 13:33:28.739 +00:00] [INF] [36] Emby.Server.Implementations.Session.SessionManager: Logging out access token "256e05a1bcfc4c42a363838029b68bd7"
+[2026-11-04 13:33:28.774 +00:00] [INF] [36] Emby.Server.Implementations.HttpServer.WebSocketManager: WS "192.168.1.187" closed
+[2026-11-04 13:33:28.964 +00:00] [INF] [36] Jellyfin.Api.Auth.CustomAuthenticationHandler: AuthenticationScheme: "CustomAuthentication" was challenged.
+[2026-11-04 13:33:28.964 +00:00] [INF] [37] Jellyfin.Api.Auth.CustomAuthenticationHandler: AuthenticationScheme: "CustomAuthentication" was challenged.
+[2026-11-04 13:33:28.964 +00:00] [INF] [22] Jellyfin.Api.Auth.CustomAuthenticationHandler: AuthenticationScheme: "CustomAuthentication" was challenged.
+[2026-11-04 13:33:43.591 +00:00] [INF] [6] Jellyfin.Server.Implementations.Users.UserManager: Authentication request for "gizmo" has succeeded.
+[2026-11-04 13:33:43.592 +00:00] [INF] [6] Emby.Server.Implementations.Session.SessionManager: Current/Max sessions for user "gizmo": 1/0
+[2026-11-04 13:33:43.592 +00:00] [INF] [6] Emby.Server.Implementations.Session.SessionManager: Creating new access token for user 3a40950a-d50e-4346-82d3-97a92b114bef
+[2026-11-04 13:33:43.670 +00:00] [INF] [33] Emby.Server.Implementations.HttpServer.WebSocketManager: WS "192.168.1.187" request
+[2026-11-04 13:34:41.415 +00:00] [INF] [31] Emby.Server.Implementations.Library.LibraryManager: Validating media library
+[2026-11-04 13:34:41.478 +00:00] [WRN] [31] MediaBrowser.Controller.Entities.BaseItem: Library folder "/config/data/playlists" is inaccessible or empty, skipping
+[2026-11-04 13:34:41.794 +00:00] [WRN] [36] MediaBrowser.Controller.Entities.BaseItem: Library folder "/config/data/playlists" is inaccessible or empty, skipping
+[2026-11-04 13:34:52.093 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Running 9 post-scan task(s)
+[2026-11-04 13:34:52.094 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 1/9: "SplashscreenPostScanTask"
+[2026-11-04 13:34:59.387 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "SplashscreenPostScanTask" completed after 0 minute(s) and 7 seconds
+[2026-11-04 13:34:59.387 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 2/9: "ArtistsPostScanTask"
+[2026-11-04 13:34:59.397 +00:00] [INF] [39] Emby.Server.Implementations.Library.Validators.ArtistsValidator: Refreshed metadata for 0 new artists out of 0 total
+[2026-11-04 13:34:59.401 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "ArtistsPostScanTask" completed after 0 minute(s) and 0 seconds
+[2026-11-04 13:34:59.401 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 3/9: "CollectionPosterVerifyPostScanTask"
+[2026-11-04 13:35:00.924 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "CollectionPosterVerifyPostScanTask" completed after 0 minute(s) and 1 seconds
+[2026-11-04 13:35:00.924 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 4/9: "CollectionPostScanTask"
+[2026-11-04 13:35:00.925 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "CollectionPostScanTask" completed after 0 minute(s) and 0 seconds
+[2026-11-04 13:35:00.925 +00:00] [INF] [39] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 5/9: "GenresPostScanTask"
+[2026-11-04 13:35:04.031 +00:00] [INF] [29] Emby.Server.Implementations.Library.Validators.GenresValidator: Refreshed metadata for 4 new genres out of 4 total
+[2026-11-04 13:35:04.039 +00:00] [INF] [29] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "GenresPostScanTask" completed after 0 minute(s) and 3 seconds
+[2026-11-04 13:35:04.040 +00:00] [INF] [29] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 6/9: "MusicGenresPostScanTask"
+[2026-11-04 13:35:04.050 +00:00] [INF] [29] Emby.Server.Implementations.Library.Validators.MusicGenresValidator: Refreshed metadata for 0 new music genres out of 0 total
+[2026-11-04 13:35:04.051 +00:00] [INF] [29] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "MusicGenresPostScanTask" completed after 0 minute(s) and 0 seconds
+[2026-11-04 13:35:04.051 +00:00] [INF] [29] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 7/9: "StudiosPostScanTask"
+[2026-11-04 13:35:05.643 +00:00] [INF] [37] Emby.Server.Implementations.Library.Validators.StudiosValidator: Refreshed metadata for 7 new studios out of 7 total
+[2026-11-04 13:35:05.649 +00:00] [INF] [37] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "StudiosPostScanTask" completed after 0 minute(s) and 1 seconds
+[2026-11-04 13:35:05.649 +00:00] [INF] [37] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 8/9: "CleanDatabaseScheduledTask"
+[2026-11-04 13:35:05.661 +00:00] [INF] [37] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "CleanDatabaseScheduledTask" completed after 0 minute(s) and 0 seconds
+[2026-11-04 13:35:05.661 +00:00] [INF] [37] Emby.Server.Implementations.Library.LibraryManager: Running post-scan task 9/9: "RefreshDatabaseStatisticsPostScanTask"
+[2026-11-04 13:35:05.664 +00:00] [INF] [37] Jellyfin.Database.Providers.Sqlite.SqliteDatabaseProvider: Analyzing jellyfin.db
+[2026-11-04 13:35:05.684 +00:00] [INF] [37] Emby.Server.Implementations.Library.LibraryManager: Post-scan task "RefreshDatabaseStatisticsPostScanTask" completed after 0 minute(s) and 0 seconds
+[2026-11-04 13:35:05.684 +00:00] [INF] [37] Emby.Server.Implementations.Library.LibraryManager: All post-scan tasks completed after 0 minute(s) and 13 seconds
+[2026-11-04 13:35:05.692 +00:00] [INF] [37] Emby.Server.Implementations.ScheduledTasks.TaskManager: "Analyser la médiathèque" Completed after 0 minute(s) and 24 seconds
+[2026-11-04 13:35:05.825 +00:00] [INF] [34] Emby.Server.Implementations.IO.LibraryMonitor: Watching directory "/media/series"
+[2026-11-04 13:35:05.826 +00:00] [INF] [29] Emby.Server.Implementations.IO.LibraryMonitor: Watching directory "/media/films"
+[2026-11-04 13:35:39.040 +00:00] [INF] [33] Jellyfin.Api.Helpers.MediaInfoHelper: User policy for "gizmo". EnablePlaybackRemuxing: True EnableVideoPlaybackTranscoding: True EnableAudioPlaybackTranscoding: True
+[2026-11-04 13:35:45.483 +00:00] [INF] [6] Emby.Server.Implementations.Session.SessionManager: User "gizmo" started playback of '"Eragon"' ("Jellyfin Web" "13.0.0")
+[2026-11-04 13:35:50.840 +00:00] [INF] [39] Emby.Server.Implementations.Session.SessionManager: User "gizmo" stopped playback of '"Eragon"' at "1628570"ms ("Jellyfin Web" "13.0.0")
