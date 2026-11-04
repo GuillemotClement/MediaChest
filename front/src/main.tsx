@@ -15,8 +15,11 @@ const router = createBrowserRouter([
   {
     element: <App />,
     children: [
-      { path: "/connexion", element: <AuthPage key="login" mode="login" /> },
-      { path: "/inscription", element: <AuthPage key="register" mode="register" /> },
+      { path: "/login", element: <AuthPage key="login" mode="login" /> },
+      {
+        path: "/inscription",
+        element: <AuthPage key="register" mode="register" />,
+      },
       {
         element: <RequireAuth />,
         children: [
@@ -32,5 +35,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode><RouterProvider router={router} /></StrictMode>,
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
 );

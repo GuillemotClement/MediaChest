@@ -1,0 +1,30 @@
+services:
+  front:
+    build: !reset null
+    image: node:24-alpine
+    working_dir: /app
+    command:
+      - sh
+      - -ec
+      - |
+        corepack enable
+        corepack prepare pnpm@12.16.1 --activate
+        pnpm install --frozen-lockfile
+        exec pnpm dev --host 0.0.0.0
+    ports: !override
+      - "${FRONTEND_PORT:-5173}:5173"
+    environment:
+      API_PROXY_TARGET: http://api:3000
+    volumes:
+      - ./front:/app
+      - front_node_modules:/app/node_modules
+
+  api:
+    command: ["node", "--watch", "scripts/start.js"]
+    volumes:
+      - ./api/src:/app/src:ro
+      - ./api/drizzle:/app/drizzle:ro
+      - ./api/scripts:/app/scripts:ro
+
+volumes:
+  front_node_modules:
