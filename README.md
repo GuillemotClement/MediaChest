@@ -2,19 +2,53 @@
 
 Bibliothèque multimédia avec un frontend React/Vite et une API Express en JavaScript.
 
-## Démarrage local
+## Démarrage avec Docker Compose
 
-Prérequis : Node.js 24, pnpm (via Corepack) et Docker Compose.
+Prérequis : Docker avec Docker Compose.
 
 ```sh
-# À la racine : PostgreSQL et Adminer
-docker compose up -d
+docker compose up --build -d
+```
 
-# API
+Ouvrir http://localhost:5173. Adminer est disponible sur http://localhost:8080.
+Compose construit le front React et l’API. PostgreSQL doit être prêt avant que
+l’API applique les migrations versionnées ; le front démarre lorsque l’API est saine.
+Nginx sert les fichiers du front, gère les routes React et relaie `/api` vers l’API.
+Les migrations sont vérifiées à chaque démarrage et ne sont appliquées qu’une fois.
+Une migration en échec empêche le démarrage de l’API.
+
+Les données PostgreSQL et le secret d’authentification généré automatiquement sont
+conservés dans des volumes. `docker compose down` les conserve ;
+`docker compose down -v` les supprime, y compris les comptes et sessions.
+Un secret explicite peut être fourni avec `BETTER_AUTH_SECRET` (32 caractères minimum).
+
+Pour changer l’adresse publique, définir dans le `.env` racine, par exemple :
+
+```dotenv
+FRONTEND_PORT=8090
+APP_URL=http://localhost:8090
+```
+
+Pour un accès distant, utiliser l’adresse publique dans `APP_URL`.
+Les variables `POSTGRES_USER`, `POSTGRES_PASSWORD` et `POSTGRES_DB` configurent
+PostgreSQL et la connexion de l’API. Les caractères réservés d’URL dans les
+identifiants doivent être encodés dans l’URL de connexion.
+
+```sh
+docker compose logs -f api
+docker compose ps
+```
+
+## Développement local
+
+Prérequis : Node.js 24 et pnpm (via Corepack).
+Lancer uniquement les services de données puis les serveurs de développement :
+
+```sh
+docker compose up -d db adminer
 cd api
 cp .env.example .env
-# Remplacer BETTER_AUTH_SECRET par une valeur aléatoire :
-# node -e "console.log(require('node:crypto').randomBytes(48).toString('hex'))"
+# Remplacer BETTER_AUTH_SECRET par un secret aléatoire d’au moins 32 caractères.
 corepack pnpm install
 corepack pnpm db:migrate
 corepack pnpm dev
@@ -28,8 +62,7 @@ corepack pnpm install
 corepack pnpm dev
 ```
 
-Ouvrir http://localhost:5173. L’API écoute sur http://localhost:3000 et Adminer sur http://localhost:8080.
-Le fichier `api/.env` local est déjà configuré avec un secret généré ; il est ignoré par Git.
+Le front écoute sur http://localhost:5173 et l’API locale sur http://localhost:3000.
 
 ## Authentification
 
