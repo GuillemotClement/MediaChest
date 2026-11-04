@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import App from "./App";
 import RequireAuth from "./components/RequireAuth";
 import Search from "./pages/Search";
+import MediaDetail from "./pages/MediaDetail";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
         children: [
           { path: "/", element: <Home /> },
           { path: "/recherche", element: <Search /> },
+          { path: "/medias/:id", element: <MediaDetail /> },
           { path: "*", element: <NotFound /> },
         ],
       },

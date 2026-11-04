@@ -121,11 +121,14 @@ corepack pnpm test:e2e
 
 ## Recherche de films et séries (TMDB)
 
-La page `/recherche`, réservée aux utilisateurs connectés, recherche un titre en
-français parmi les films ou les séries. Les résultats sont paginés et permettent
+La page `/recherche`, réservée aux utilisateurs connectés, recherche automatiquement
+un titre en français après 300 ms sans saisie. Le type est optionnel : Tous
+(films et séries), Film ou Série. La liste affiche jusqu’à 10 résultats dans
+l’ordre de pertinence TMDB, sans les personnes, et permet
 d’ajouter un média à la liste personnelle, conservée dans PostgreSQL. Un même
-média ne peut être ajouté qu’une fois par utilisateur et par type. La page de
-consultation de cette liste sera ajoutée dans une prochaine étape.
+média ne peut être ajouté qu’une fois par utilisateur et par type. L’accueil affiche la liste personnelle dans un tableau (nom, année, affiche et
+type), avec une recherche instantanée par titre, sans distinction de casse ni
+d’accents. La consultation de la liste ne nécessite pas d’appel à TMDB.
 
 Créer un compte sur https://www.themoviedb.org puis demander un accès API dans
 les paramètres : https://www.themoviedb.org/settings/api. Copier le **API Read
@@ -141,3 +144,14 @@ Sans jeton, la page affiche une indisponibilité explicite ; aucun résultat de
 démonstration n’est présenté comme une vraie recherche. Les données et images
 proviennent de TMDB ; l’usage non commercial est gratuit avec attribution,
 l’usage commercial nécessite une licence adaptée.
+
+
+## Fiche d’un média
+
+Depuis l’accueil, cliquer sur un média (ou son nom ou son affiche) ouvre
+`/medias/:id`. L’API vérifie que l’entrée appartient à l’utilisateur connecté
+avant de récupérer les détails TMDB en français. La fiche présente affiche,
+résumé, date, genres, durée, réalisation ou créateurs, note et distribution
+(jusqu’à dix acteurs). Pour les séries : saisons, épisodes, dernière diffusion
+et distribution sur l’ensemble des saisons. Les informations manquantes sont
+signalées ; un échec de TMDB permet de réessayer. Le jeton TMDB est requis.
