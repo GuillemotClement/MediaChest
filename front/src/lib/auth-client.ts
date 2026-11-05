@@ -5,6 +5,7 @@ import {
 } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   sessionOptions: { refetchInterval: 60 },
   plugins: [
     usernameClient(),

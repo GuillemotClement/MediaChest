@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
 import "./index.css";
+import LoginPage from "./pages/auth/login/LoginPage";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
           { path: "/medias/:id", element: <MediaDetail /> },
           { path: "/administration/medias", element: <AdminMedia /> },
           { path: "*", element: <NotFound /> },
+          { path: "login-new", element: <LoginPage /> },
         ],
       },
     ],
