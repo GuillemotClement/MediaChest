@@ -38,8 +38,8 @@
     "lint:fix": "eslint . --fix",
     "build": "tsc",
     "dev": "tsx watch src/server.ts",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write ./src",
+    "format:check": "prettier --check ./src",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   }
