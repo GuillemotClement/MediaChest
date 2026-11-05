@@ -155,7 +155,6 @@ démonstration n’est présenté comme une vraie recherche. Les données et ima
 proviennent de TMDB ; l’usage non commercial est gratuit avec attribution,
 l’usage commercial nécessite une licence adaptée.
 
-
 ## Fiche d’un média
 
 Depuis l’accueil, cliquer sur un média (ou son nom ou son affiche) ouvre
@@ -223,3 +222,12 @@ du statut global administrateur : **Dispo** uniquement pour le statut Dispo ;
 **Indisponible** pour À télécharger, Téléchargé ou un statut global absent.
 La valeur est commune à tous les utilisateurs ayant ajouté le même média et
 est relue au chargement de leur liste. Le statut personnel À voir/Vu reste séparé.
+
+---
+
+## Dev
+
+```shell
+docker compose -f compose.yml -f compose.dev.yml config --quiet
+docker compose -f compose.yml -f compose.dev.yml up --build -d
+```

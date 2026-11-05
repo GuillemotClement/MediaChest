@@ -5,7 +5,7 @@
     "*.css": "tailwindcss"
   },
   // parametre user
-  "editor.tabSize": 2,
+  // "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
   "editor.formatOnSave": true,
@@ -30,7 +30,7 @@
   // "workbench.tree.indent": ,
 
   // Onglets plus hauts
-  "window.density.editorTabHeight": "default",
+  // "window.density.editorTabHeight": "default",
 
   // configuration icone dossier
   "catppuccin-icons.specificFolders": true,
