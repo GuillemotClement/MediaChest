@@ -12,3 +12,6 @@ test-results/
 
 backups/
 *.dump
+
+.env
+!.env.example
