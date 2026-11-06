@@ -1,10 +1,14 @@
 type FormButton = {
   text: string;
+  disabled: boolean;
 };
 
-export default function FormButton({ text }: FormButton) {
+export default function FormButton({ text, disabled }: FormButton) {
   return (
-    <button className="w-full btn btn-primary mt-10" type="submit">
+    <button
+      className={`w-full btn btn-primary mt-5 ${disabled ? 'disabled' : ''}`}
+      type="submit"
+    >
       {text}
     </button>
   );

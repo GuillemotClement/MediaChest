@@ -1,8 +1,8 @@
-import type { FieldError, UseFormRegisterReturn } from "react-hook-form";
+import type { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 
 type FormInputText = {
   register: UseFormRegisterReturn;
-  type: "text" | "email" | "password";
+  type: 'text' | 'email' | 'password';
   placeholder?: string;
   label: string;
   id: string;
@@ -21,19 +21,25 @@ export default function FormInputText({
 }: FormInputText) {
   return (
     <fieldset className="fieldset">
-      <label className="fieldset-legend" htmlFor={id}>
+      <label
+        className="fieldset-legend"
+        htmlFor={id}
+      >
         {label}
       </label>
       <input
         type={type}
         id={id}
-        className="input w-full"
+        className={`input w-full ${error ? 'input-error' : ''}`}
         placeholder={placeholder}
         {...register}
       />
       {description && <p className="text-gray-400">{description}</p>}
       {error && (
-        <p role="alert" className="text-error">
+        <p
+          role="alert"
+          className="text-error"
+        >
           {error.message}
         </p>
       )}

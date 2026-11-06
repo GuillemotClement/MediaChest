@@ -6,6 +6,8 @@ import FormTitle from '../../../components/form/FormTitle';
 import FormButton from '../../../components/form/FormButton';
 import { authClient } from '../../../lib/auth-client';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import FormGlobalError from '../../../components/form/FormGlobalError';
 
 type LoginForm = {
   email: string;
@@ -13,12 +15,15 @@ type LoginForm = {
 };
 
 export default function LoginPage() {
-  const [error, setError] = useState<string | null>(null);
+  const [globalError, setGlobalError] = useState<string | null>('test');
+  const [disabled, setDisabled] = useState(false);
+
+  const navigate = useNavigate();
 
   const loginSchema = z
     .object({
-      email: z.email().min(2),
-      password: z.string().trim().min(8),
+      email: z.email('Email invalide').min(2),
+      password: z.string().min(8, { error: 'Le mot de passe doit contenir au moins 8 caractères' }),
     })
     .required();
 
@@ -37,33 +42,27 @@ export default function LoginPage() {
   });
 
   const onSubmit: SubmitHandler<LoginForm> = async (values: LoginForm) => {
-    const { email, password } = values;
+    setDisabled(true);
+    setGlobalError(null);
 
-    try {
-      await authClient.signIn.email(
-        {
-          email,
-          password,
-          callbackURL: '/',
-          rememberMe: true,
-        },
-        {
-          onRequest: (ctx) => {
-            console.log('ctx on request: ', ctx);
-          },
-          onSuccess: (ctx) => {
-            console.log('ctx onSucces: ', ctx);
-          },
-          onError: (error) => {
-            setError('Serveur indisponible. Réessayer plus tard');
-            console.error('onError: ', error);
-          },
-        },
+    const { error } = await authClient.signIn.email({
+      email: values.email,
+      password: values.password,
+      rememberMe: true,
+    });
+
+    if (error) {
+      setGlobalError(
+        error.status === 401
+          ? 'Email ou mot de passe incorrect'
+          : 'Connexion impossible. Réeassyer plus tard',
       );
-    } catch (err) {
-      setError('Serveur indisponible. Réessayer plus tard');
-      console.error('error try: ', err);
+      setDisabled(false);
+      return;
     }
+
+    // replace: true -> permet de remplace la page dans l'historique. Un retourn en arriere ne ramene par sur login
+    navigate('/', { replace: true });
   };
 
   return (
@@ -92,9 +91,12 @@ export default function LoginPage() {
         description="8 caractères attendus"
       />
 
-      {error && <p>{error}</p>}
+      {globalError && <FormGlobalError error={globalError} />}
 
-      <FormButton text="Inscription" />
+      <FormButton
+        text="Connexion"
+        disabled={disabled}
+      />
     </form>
   );
 }
