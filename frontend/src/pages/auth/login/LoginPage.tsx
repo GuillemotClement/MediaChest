@@ -6,7 +6,7 @@ import FormTitle from '../../../components/form/FormTitle';
 import FormButton from '../../../components/form/FormButton';
 import { authClient } from '../../../lib/auth-client';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import FormGlobalError from '../../../components/form/FormGlobalError';
 
 type LoginForm = {
@@ -15,7 +15,7 @@ type LoginForm = {
 };
 
 export default function LoginPage() {
-  const [globalError, setGlobalError] = useState<string | null>('test');
+  const [globalError, setGlobalError] = useState<string | null>(null);
   const [disabled, setDisabled] = useState(false);
 
   const navigate = useNavigate();
@@ -97,6 +97,15 @@ export default function LoginPage() {
         text="Connexion"
         disabled={disabled}
       />
+
+      <div className="text-center mt-5">
+        <Link
+          to="/register"
+          className="mt-5 text-gray-400 text-center link"
+        >
+          Je n'ai pas de compte
+        </Link>
+      </div>
     </form>
   );
 }
