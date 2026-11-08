@@ -1,8 +1,8 @@
-import type { Movie } from '../../../types/movie';
-import type { Genre } from '../homepage.service';
+import type { Serie } from '../../../../types/media';
+import type { Genre } from '../../homepage.service';
 
 type CardMedia = {
-  media: Movie;
+  media: Serie;
   genres: Genre[];
 };
 
@@ -14,14 +14,14 @@ export default function CardMedia({ media, genres }: CardMedia) {
       <figure>
         <img
           src={`https://image.tmdb.org/t/p/w500${media.poster_path}`}
-          alt={`Affiche de ${media.title}`}
+          alt={`Affiche de ${media.name}`}
           loading="lazy"
           width={200}
         />
       </figure>
       <div className="card-body">
         <h2 className="card-title">
-          {media.title}
+          {media.name}
           {/* <div className="badge badge-secondary">NEW</div> */}
         </h2>
         <p className="line-clamp-3 min-h-[4.5em] leading-normal">{media.overview}</p>
