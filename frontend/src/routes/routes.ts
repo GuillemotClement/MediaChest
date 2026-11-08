@@ -5,6 +5,8 @@ import LoginPage from '../pages/auth/login/LoginPage';
 import requireAuth from '../middlewares/requireAuth';
 import RegisterPage from '../pages/auth/register/RegisterPage';
 import RouteErrorPage from '../pages/errors/RouteErrorPage';
+import DetailMedia from '../pages/media/DetailMedia';
+import DetailSerie from '../pages/media/DetailSerie';
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +28,15 @@ export const router = createBrowserRouter([
           {
             path: '/',
             Component: Homepage,
+          },
+          // TODO: change the path
+          {
+            path: '/media/:mediaId',
+            Component: DetailMedia,
+          },
+          {
+            path: '/serie/details/:serieId',
+            Component: DetailSerie,
           },
         ],
       },
