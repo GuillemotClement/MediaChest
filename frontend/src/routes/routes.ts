@@ -4,6 +4,7 @@ import App from '../App';
 import LoginPage from '../pages/auth/login/LoginPage';
 import requireAuth from '../middlewares/requireAuth';
 import RegisterPage from '../pages/auth/register/RegisterPage';
+import RouteErrorPage from '../pages/errors/RouteErrorPage';
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       {
         // le middleware permet de vérifier qu'un user est bien authentifier pour accéder au pages
         middleware: [requireAuth],
+        ErrorBoundary: RouteErrorPage,
         children: [
           {
             path: '/',
