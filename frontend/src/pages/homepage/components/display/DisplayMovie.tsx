@@ -1,65 +1,43 @@
-import { useEffect, useState } from 'react';
-import { getMovieGenres, getPopularMovies, type Genre } from '../../homepage.service';
-import type { Movie } from '../../../../types/media';
 import CardMovie from '../card/CardMovie';
+import { useQuery } from '@tanstack/react-query';
+import { getMovieGenres, getPopularMovies } from '../../../../services/tmdb/tmdb.service';
 
 export default function DisplayMovie() {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const moviesQuery = useQuery({
+    queryKey: ['movies', 'popular', 'fr-FR'],
+    queryFn: ({ signal }) => getPopularMovies(signal),
+    staleTime: 5 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const genresQuery = useQuery({
+    queryKey: ['genres', 'movie', 'fr-FR'],
+    queryFn: ({ signal }) => getMovieGenres(signal),
+    staleTime: 60 * 60 * 1000,
+  });
 
-    async function loadPopularMovies(): Promise<void> {
-      try {
-        const [moviesData, genresData] = await Promise.all([
-          getPopularMovies(controller.signal),
-          getMovieGenres(controller.signal),
-        ]);
-
-        if (!controller.signal.aborted) {
-          setMovies(moviesData);
-          setGenres(genresData);
-        }
-      } catch (error: unknown) {
-        if (controller.signal.aborted) {
-          return;
-        }
-
-        console.error(error);
-
-        setError(error instanceof Error ? error.message : 'Impossible de récupérer les médias.');
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsLoading(false);
-        }
-      }
-    }
-    void loadPopularMovies();
-    return () => controller.abort();
-  }, []);
-
-  if (isLoading) {
-    return <p>Chargement en cours</p>;
+  if (moviesQuery.isPending || genresQuery.isPending) {
+    return <p>Chargement ...</p>;
   }
 
-  if (error) {
-    return <p>{error}</p>;
+  if (moviesQuery.isError) {
+    return <p role="alert">{moviesQuery.error.message}</p>;
   }
 
-  if (movies.length === 0) {
+  if (genresQuery.isError) {
+    return <p role="alert">{genresQuery.error.message}</p>;
+  }
+
+  if (moviesQuery.data.length === 0) {
     return <p>Aucun films</p>;
   }
 
   return (
     <div className="border border-gray-300 bg-gray-50 rounded py-5 grid grid-cols-3 p-5 gap-3">
-      {movies.map((movie) => (
+      {moviesQuery.data.map((movie) => (
         <CardMovie
           key={movie.id}
           media={movie}
-          genres={genres}
+          genres={genresQuery.data}
         />
       ))}
     </div>

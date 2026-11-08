@@ -1,5 +1,5 @@
+import type { Genre } from '../../../../services/tmdb/tmdb.type';
 import type { Movie } from '../../../../types/media';
-import type { Genre } from '../../homepage.service';
 
 type CardMedia = {
   media: Movie;
