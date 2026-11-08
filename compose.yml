@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       - VITE_BACKEND_URL=${VITE_BACKEND_URL:-http://localhost:8010}
+      - VITE_TMDB_READ_ACCESS_TOKEN=${VITE_TMDB_READ_ACCESS_TOKEN}
     ports:
       - "5173:5173"
     volumes:
@@ -20,6 +21,7 @@ services:
       - NODE_ENV=${NODE_ENV:-development}
       - PORT=${PORT:-8010}
       - DATABASE_URL=${DATABASE_URL:-postgresql://db:db@db:5432/mediachest}
+      - FRONT_URL=${FRONT_URL:-http://localhost:5173}
     ports:
       - "8010:8010"
     volumes:
@@ -47,7 +49,7 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
-      
+
   adminer:
     image: adminer:6.2.0
     restart: unless-stopped
