@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import type { Genre } from '../../../../services/tmdb/tmdb.type';
 import type { Movie } from '../../../../types/media';
 
@@ -10,7 +11,10 @@ export default function CardMedia({ media, genres }: CardMedia) {
   const mediaGenres = genres.filter((genre) => media.genre_ids.includes(genre.id));
 
   return (
-    <div className="card bg-base-100 w-full min-w-0 shadow-sm border border-gray-200 pt-5">
+    <Link
+      to={`/media/${media.id}`}
+      className="card bg-base-100 w-full min-w-0 shadow-sm border border-gray-200 pt-5"
+    >
       <figure>
         <img
           src={`https://image.tmdb.org/t/p/w500${media.poster_path}`}
@@ -37,6 +41,6 @@ export default function CardMedia({ media, genres }: CardMedia) {
           ))}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

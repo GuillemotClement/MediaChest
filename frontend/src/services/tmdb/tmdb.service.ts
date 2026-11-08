@@ -1,9 +1,10 @@
-import type { Movie, Serie } from '../../types/media';
+import type { MediaDetail, Movie, Serie } from '../../types/media';
+import type { SerieDetail } from '../../types/serie';
 import { tmdbApi } from './tmdb.api';
-import type { Genre, TMDBGenreResponse, TMDBResponse } from './tmdb.type';
+import { type Genre, type TMDBGenreResponse, type TMDBResponse } from './tmdb.type';
 
 export const getPopularMovies = async (signal?: AbortSignal): Promise<Movie[]> => {
-  const { data } = await tmdbApi.get<TMDBResponse<Movie>>('/discover/movie', {
+  const response = await tmdbApi.get<TMDBResponse<Movie>>('/movie/popular', {
     signal,
     params: {
       include_adult: false,
@@ -13,7 +14,9 @@ export const getPopularMovies = async (signal?: AbortSignal): Promise<Movie[]> =
       sort_by: 'popularity.desc',
     },
   });
-  return data.results;
+  console.log(response);
+
+  return response.data.results;
 };
 
 export const getMovieGenres = async (signal?: AbortSignal): Promise<Genre[]> => {
@@ -51,4 +54,27 @@ export const getSerieGenres = async (signal?: AbortSignal): Promise<Genre[]> => 
   });
 
   return data.genres;
+};
+
+export const getMovieById = async (mediaId: string, signal?: AbortSignal) => {
+  const { data } = await tmdbApi.get<MediaDetail>(`/movie/${mediaId}`, {
+    signal,
+    params: {
+      language: 'fr-FR',
+    },
+  });
+
+  return data;
+};
+
+export const getSerieById = async (serieId: string, signal?: AbortSignal) => {
+  const response = await tmdbApi.get<SerieDetail>(`/tv/${serieId}`, {
+    signal,
+    params: {
+      language: 'fr-FR',
+    },
+  });
+
+  const data = response.data;
+  return data;
 };
