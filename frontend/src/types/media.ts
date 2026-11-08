@@ -1,4 +1,4 @@
-import type { Genre } from "../services/tmdb/tmdb.type";
+import type { Genre } from '../services/tmdb/tmdb.type';
 
 export interface Movie {
   genre_ids: number[];
@@ -65,10 +65,9 @@ export type ProductionCompanie = {
   logo_path: string;
   name: string;
   origin_country: string;
-}
+};
 
 export type ProductionCountries = {
   iso_3166_1: string;
   name: string;
-}
-
+};
