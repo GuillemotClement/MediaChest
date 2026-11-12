@@ -18,7 +18,7 @@
     "db:migrate": "npx drizzle-kit migrate"
   },
   "dependencies": {
-    "better-auth": "^1.7.17",
+    "better-auth": "^1.7.18",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
     "drizzle-orm": "1.0.0-rc.5",
