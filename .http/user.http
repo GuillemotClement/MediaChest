@@ -1,0 +1,4 @@
+@baseUrl = http://localhost:8010/api
+@origin = http://localhost:5173
+
+#### Create new user 

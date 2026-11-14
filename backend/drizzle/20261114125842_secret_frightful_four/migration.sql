@@ -1,0 +1,1 @@
+ALTER TABLE "media_user" ADD CONSTRAINT "media_user_user_id_media_id_unique" UNIQUE("user_id","media_id");

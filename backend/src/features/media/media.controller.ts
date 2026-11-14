@@ -1,16 +1,17 @@
-import { RequestHandler } from 'express';
+import { NextFunction, RequestHandler } from 'express';
+import * as mediaService from './media.service.js';
+import { AuthenticationError } from '../../errors/index.js';
 
-export const addMediaToUser: RequestHandler = async (req, res, next) => {
+export const addMediaToUser: RequestHandler = async (req, res, next: NextFunction) => {
   try {
     const userId = req.user?.id;
 
     if (!userId) {
-      res.status(401).json({ message: 'Authentifcation requise' });
+      // TODO: mettre en place la gestion d'erreur
+      throw new AuthenticationError();
     }
 
-    const { TMDBId } = req.body;
-
-    const result = await mediaService.addMediaToUser(userId, mediaId);
+    const result = await mediaService.addMediaToUser(userId, req.body);
 
     res.status(201).json(result);
   } catch (error) {

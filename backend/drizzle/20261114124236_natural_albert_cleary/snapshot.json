@@ -1,0 +1,417 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "df9a3def-1343-4854-af59-928cfeb85bc4",
+  "prevIds": [
+    "0d7a5d29-f889-429d-a429-a5c5c74d9a24"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "status"
+      ],
+      "writes": [
+        "s|enum|public.status",
+        "n|enum|public.status",
+        "e|enum|public.status",
+        "n|type|public.status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "media_type"
+      ],
+      "writes": [
+        "s|enum|public.media_type",
+        "n|enum|public.media_type",
+        "e|enum|public.media_type",
+        "n|type|public.media_type"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "media"
+      ],
+      "writes": [
+        "s|tbl|public.media",
+        "n|tbl|public.media",
+        "e|tbl|public.media",
+        "n|rel|public.media",
+        "n|type|public.media",
+        "n|rel|public.media_pkey",
+        "n|rel|public.media_tmdb_id_key"
+      ],
+      "reads": [
+        "n|sch|public",
+        "n|enum|public.media_type",
+        "n|enum|public.status"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "media_user"
+      ],
+      "writes": [
+        "s|tbl|public.media_user",
+        "n|tbl|public.media_user",
+        "e|tbl|public.media_user",
+        "n|rel|public.media_user",
+        "n|type|public.media_user",
+        "n|rel|public.media_user_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "media_user"
+      ],
+      "writes": [
+        "s|fk|public.media_user.media_user_user_id_user_id_fkey",
+        "n|fk|public.media_user.media_user_user_id_user_id_fkey",
+        "e|fk|public.media_user.media_user_user_id_user_id_fkey",
+        "n|con|public.media_user.media_user_user_id_user_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.media_user",
+        "n|sch|public",
+        "n|tbl|public.user",
+        "n|sch|public",
+        "n|col|public.media_user.user_id",
+        "n|col|public.user.id",
+        "e|uniqueness|public.user.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "media_user"
+      ],
+      "writes": [
+        "s|fk|public.media_user.media_user_media_id_media_id_fkey",
+        "n|fk|public.media_user.media_user_media_id_media_id_fkey",
+        "e|fk|public.media_user.media_user_media_id_media_id_fkey",
+        "n|con|public.media_user.media_user_media_id_media_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.media_user",
+        "n|sch|public",
+        "n|tbl|public.media",
+        "n|sch|public",
+        "n|col|public.media_user.media_id",
+        "n|col|public.media.id",
+        "e|uniqueness|public.media.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "media",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "media_user",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "status",
+        "values": [
+          "En attente",
+          "Télécharger",
+          "Disponible"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "media_type",
+        "values": [
+          "film",
+          "serie"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media",
+        "name": "tmdb_id",
+        "type": "varchar",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media",
+        "name": "name",
+        "type": "varchar",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media",
+        "name": "type",
+        "type": "media_type",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media",
+        "name": "status",
+        "type": "status",
+        "typeSchema": "public",
+        "notNull": false,
+        "dimensions": 0,
+        "default": "'En attente'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "user_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "media_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "created_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "updated_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "media_user_user_id_user_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "user_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "user",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "media_user_media_id_media_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "media_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "media",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media",
+        "name": "media_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "media_user_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media",
+        "name": "media_tmdb_id_key",
+        "nameExplicit": false,
+        "columns": [
+          "tmdb_id"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    }
+  ]
+}

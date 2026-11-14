@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:8010/api
+@origin = http://localhost:5173
+
+# Credentials partagés entre la création de compte et la connexion
+@name = gizmo
+@email = gizmo@mail.com
+@password = password
+
+### 1. Création d'un utilisateur
+POST {{baseUrl}}/auth/sign-up/email
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "{{name}}",
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 2. Connexion avec les mêmes credentials (récupère le cookie de session Better Auth)
+POST {{baseUrl}}/auth/sign-in/email
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 3. Ajouter un media à l'utilisateur connecté
+# Le userId n'est pas envoyé dans le body : il est récupéré depuis la session (req.user.id)
+POST {{baseUrl}}/media/add-media-to-user
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "tmdbId": "550",
+  "name": "Fight Club",
+  "mediaType": "film"
+}

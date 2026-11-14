@@ -1,6 +1,8 @@
 import { RequestHandler } from 'express';
 import { auth } from '../lib/auth.js';
 import { fromNodeHeaders } from 'better-auth/node';
+import { AuthenticationError } from '../errors/index.js';
+import AppError from '../errors/AppError.js';
 
 export const requireAuth: RequestHandler = async (req, res, next) => {
   const isPublicRoute =
@@ -17,8 +19,7 @@ export const requireAuth: RequestHandler = async (req, res, next) => {
     });
 
     if (!result) {
-      res.status(401).json({ message: 'Authentification requise' });
-      return;
+      throw new AuthenticationError();
     }
 
     req.user = result.user;
@@ -26,6 +27,9 @@ export const requireAuth: RequestHandler = async (req, res, next) => {
 
     next();
   } catch (error) {
-    next(error);
+    if (error instanceof AuthenticationError) {
+      res.status(401).json({ message: 'Authentification requise' });
+    }
+    throw new AppError('Something is broken in authenticate middleware');
   }
 };

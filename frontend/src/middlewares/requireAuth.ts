@@ -9,10 +9,12 @@ export default async function requireAuth() {
   const { data: session, error } = await authClient.getSession();
 
   if (error) {
-    throw new Error('Impossible de vérifier la session');
+    console.error(error.message);
+    throw redirect('/login');
   }
 
   if (!session) {
+    console.error('Pas de session');
     throw redirect('/login');
   }
 }

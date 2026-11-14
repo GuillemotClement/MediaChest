@@ -1,0 +1,49 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "2540837e-9800-41e8-9e69-253a40bf263c",
+  "prevIds": [
+    "df9a3def-1343-4854-af59-928cfeb85bc4"
+  ],
+  "footprints": [
+    {
+      "statementType": "add_unique",
+      "statementTarget": [
+        "table",
+        "public",
+        "media_user"
+      ],
+      "writes": [
+        "s|uq|public.media_user.media_user_user_id_media_id_unique",
+        "n|uq|public.media_user.media_user_user_id_media_id_unique",
+        "e|uq|public.media_user.media_user_user_id_media_id_unique",
+        "n|con|public.media_user.media_user_user_id_media_id_unique",
+        "n|rel|public.media_user_user_id_media_id_unique"
+      ],
+      "reads": [
+        "n|tbl|public.media_user",
+        "n|sch|public",
+        "n|col|public.media_user.user_id",
+        "n|col|public.media_user.media_id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "media_user",
+        "name": "media_user_user_id_media_id_unique",
+        "nameExplicit": true,
+        "columns": [
+          "user_id",
+          "media_id"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    }
+  ]
+}
