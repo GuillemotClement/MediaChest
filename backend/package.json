@@ -15,7 +15,10 @@
     "lint": "eslint .",
     "db:push": "npx drizzle-kit push",
     "db:generate": "npx drizzle-kit generate",
-    "db:migrate": "npx drizzle-kit migrate"
+    "db:migrate": "npx drizzle-kit migrate",
+    "test": "vitest",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration"
   },
   "dependencies": {
     "better-auth": "^1.7.17",
@@ -24,7 +27,8 @@
     "drizzle-orm": "1.0.0-rc.5",
     "express": "^5.3.0",
     "pg": "^8.23.1",
-    "winston": "^3.19.0"
+    "winston": "^3.19.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -32,15 +36,18 @@
     "@types/express": "^5.0.6",
     "@types/node": "^22.20.5",
     "@types/pg": "^8.23.1",
+    "@types/supertest": "7.2.1",
     "@typescript/native": "npm:typescript@7.0.2",
     "drizzle-kit": "1.0.0-rc.5",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.14.0",
     "prettier": "^3.9.10",
+    "supertest": "7.3.2",
     "tsx": "^4.23.15",
     "typescript": "npm:@typescript/typescript6@6.0.2",
-    "typescript-eslint": "^8.72.1"
+    "typescript-eslint": "^8.72.1",
+    "vitest": "5.1.0"
   },
   "name": "mediachest-backend",
   "version": "0.1.0",
