@@ -184,3 +184,9 @@ describe('routes inconnues', () => {
     await request(app).get('/api/media/does-not-exist').expect(404);
   });
 });
+
+
+// ----------------------------------------------------------------------------
+// describe('media.controller.getUserMedia', () => {
+
+// })

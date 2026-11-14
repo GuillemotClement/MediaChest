@@ -7,6 +7,8 @@ import RegisterPage from '../pages/auth/register/RegisterPage';
 import RouteErrorPage from '../pages/errors/RouteErrorPage';
 import DetailMedia from '../pages/media/DetailMedia';
 import DetailSerie from '../pages/media/DetailSerie';
+import { MyMediaPage } from '../pages/media/pages/MyMediaPage';
+import MediaDetailPage from '../pages/media/pages/MediaDetailPage';
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +39,14 @@ export const router = createBrowserRouter([
           {
             path: '/serie/details/:serieId',
             Component: DetailSerie,
+          },
+          {
+            path: '/my-media',
+            Component: MyMediaPage,
+          },
+          {
+            path: '/media/:mediaType/:tmdbId',
+            Component: MediaDetailPage,
           },
         ],
       },

@@ -11,4 +11,6 @@ mediaRouter.post(
   mediaController.addMediaToUser,
 );
 
+mediaRouter.get('/user-media', mediaController.getUserMedia);
+
 export default mediaRouter;

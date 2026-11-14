@@ -62,3 +62,18 @@ export const createMediaUser = async (userId: string, mediaId: number): Promise<
     throw err;
   }
 };
+
+export const getUserMedia = async (userId: string) => {
+  return db
+    .select({
+      id: media.id,
+      name: media.name,
+      tmdbId: media.tmdbId,
+      status: media.status,
+      type: media.mediaType,
+    })
+    .from(mediaUser)
+    .leftJoin(media, eq(mediaUser.mediaId, media.id))
+    .where(eq(mediaUser.userId, userId))
+    .orderBy(media.name);
+};

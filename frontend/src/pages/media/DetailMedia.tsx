@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router';
-import { addMovieToUser, getMovieById } from '../../services/tmdb/tmdb.service';
+import { getMovieById } from '../../services/tmdb/tmdb.service';
 import { convertMinuteToHour, displayDateFr } from '../../services/utils';
 import { ArrowLeft, Calendar, Clock8, Flag, Star } from 'lucide-react';
+import { addMovieToUser } from './media.service';
 
 export default function DetailMedia() {
   const { mediaId } = useParams();

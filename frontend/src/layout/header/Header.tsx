@@ -34,7 +34,9 @@ export default function Header() {
             <li>
               <Link to="/">Accueil</Link>
             </li>
-
+            <li>
+              <Link to="my-media">Ma liste</Link>
+            </li>
             {/* {session.user.role === 'admin' && (
               <li>
                 <Link to="/administration/medias">Administration</Link>

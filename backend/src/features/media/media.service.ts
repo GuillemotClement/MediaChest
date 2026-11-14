@@ -19,3 +19,7 @@ export const addMediaToUser = async (userId: string, payload: InsertMedia) => {
 
   return response;
 };
+
+export const getUserMedia = async (userId: string) => {
+  return await mediaRepository.getUserMedia(userId);
+};
