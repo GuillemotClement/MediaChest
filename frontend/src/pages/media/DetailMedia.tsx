@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router';
-import { getMovieById } from '../../services/tmdb/tmdb.service';
+import { addMovieToUser, getMovieById } from '../../services/tmdb/tmdb.service';
 import { convertMinuteToHour, displayDateFr } from '../../services/utils';
 import { ArrowLeft, Calendar, Clock8, Flag, Star } from 'lucide-react';
 
@@ -12,6 +12,17 @@ export default function DetailMedia() {
     queryFn: ({ signal }) => getMovieById(mediaId!, signal),
     enabled: Boolean(mediaId),
     staleTime: 5 * 60 * 1000,
+  });
+
+  // hook for post data
+  const addMovieMutation = useMutation({
+    mutationFn: addMovieToUser,
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
   });
 
   const data = mediaQuery.data;
@@ -26,6 +37,14 @@ export default function DetailMedia() {
   if (!data) {
     return <p>Pas de données</p>;
   }
+
+  const handleAddMovie = () => {
+    addMovieMutation.mutate({
+      tmdbId: String(data.id),
+      name: data.title,
+      mediaType: 'film',
+    });
+  };
 
   return (
     <div className="bg-white rounde border border-gray-300 p-10">
@@ -50,7 +69,13 @@ export default function DetailMedia() {
 
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold my-5">{data.title}</h1>
-        <button className="btn btn-primary">Ajouter à ma liste</button>
+        <button
+          className="btn btn-primary"
+          onClick={handleAddMovie}
+          disabled={addMovieMutation.isPending}
+        >
+          {addMovieMutation.isPending ? 'Ajout ...' : 'Ajouter à ma liste'}
+        </button>
       </div>
 
       {/* TODO: permettre d'accéder a une page de listing de film par catégorie en cliquant sur le genre */}
